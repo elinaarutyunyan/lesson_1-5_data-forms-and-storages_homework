@@ -8,6 +8,9 @@ const form = document.querySelector(".card-form");
 const statusElement = document.querySelector(".workspace__status");
 const defaultStatus = statusElement.textContent;
 let debounceTimer = null;
+const yearInput = form.elements.year;
+const restoredInput = form.elements.restored;
+const restoredError = document.getElementById("restored-error");
 
 function collectCardData(formElement) {
   const formData = new FormData(formElement);
@@ -16,6 +19,7 @@ function collectCardData(formElement) {
     country: formData.get("country"),
     type: formData.get("type"),
     year: formData.get("year"),
+    restored: formData.get("restored"),
     description: formData.get("description"),
   };
 }
@@ -42,6 +46,17 @@ function showState(name) {
   clearTimeout(debounceTimer);
 }
 
+function validateRestoredYear() {
+  const year = Number(yearInput.value);
+  const restored = Number(restoredInput.value);
+  const isValid = !year || !restored || restored >= year;
+  restoredError.hidden = isValid;
+  return isValid;
+}
+
+yearInput.addEventListener("input", validateRestoredYear);
+restoredInput.addEventListener("input", validateRestoredYear);
+
 const typeLabels = {
   architecture: "Архитектура",
   nature: "Природный объект",
@@ -57,6 +72,7 @@ function renderCard(card) {
     typeLabels[card.type] ?? card.type;
   document.querySelector('[data-view="year"]').textContent = card.year;
   document.querySelector('[data-view="description"]').textContent = card.description;
+  document.querySelector('[data-view="restored"]').textContent = card.restored;
 }
 
 function fillForm(card) {
@@ -65,6 +81,7 @@ function fillForm(card) {
   form.elements.type.value = card.type;
   form.elements.year.value = card.year;
   form.elements.description.value = card.description;
+  form.elements.restored.value = card.restored;
 }
 
 createButton.addEventListener("click", () => {
@@ -74,6 +91,10 @@ createButton.addEventListener("click", () => {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+    if (!validateRestoredYear()) { 
+    restoredInput.focus();
+    return;
+  }
   currentCard = collectCardData(form);
   renderCard(currentCard);
   saveCard(currentCard); 

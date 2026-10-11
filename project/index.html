@@ -123,6 +123,24 @@
         </div>
 
         <div class="field">
+          <label class="field__label" for="card-restored">Год реставрации</label>
+          <input
+            class="field__control"
+            id="card-restored"
+            name="restored"
+            type="number"
+            min="1000"
+            max="2026"
+            placeholder="Например, 2019"
+            required
+          />
+          <span class="field__hint">Не раньше года постройки</span>
+          <p class="field__error" id="restored-error" hidden>
+            Год реставрации не может быть раньше года постройки
+          </p>
+        </div>
+
+        <div class="field">
           <label class="field__label" for="card-description">Описание</label>
           <textarea
             class="field__control"
@@ -164,6 +182,10 @@
           <div class="saved-card__row">
             <dt>Год постройки</dt>
             <dd data-view="year"></dd>
+          </div>
+          <div class="saved-card__row">
+            <dt>Год реставрации</dt>
+            <dd data-view="restored"></dd>
           </div>
           <div class="saved-card__row">
             <dt>Описание</dt>
