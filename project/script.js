@@ -11,6 +11,7 @@ let debounceTimer = null;
 const yearInput = form.elements.year;
 const restoredInput = form.elements.restored;
 const restoredError = document.getElementById("restored-error");
+const copyButton = document.querySelector('[data-action="copy"]');
 
 function collectCardData(formElement) {
   const formData = new FormData(formElement);
@@ -75,6 +76,18 @@ function renderCard(card) {
   document.querySelector('[data-view="restored"]').textContent = card.restored;
 }
 
+function cardToText(card) {
+  return [
+    card.title,
+    `Страна: ${card.country}`,
+    `Тип: ${typeLabels[card.type] ?? card.type}`,
+    `Год постройки: ${card.year}`,
+    `Год реставрации: ${card.restored}`,
+    "",
+    card.description,
+  ].join("\n");
+}
+
 function fillForm(card) {
   form.elements.title.value = card.title;
   form.elements.country.value = card.country;
@@ -87,6 +100,20 @@ function fillForm(card) {
 createButton.addEventListener("click", () => {
   form.reset();
   showState("editor");
+});
+
+copyButton.addEventListener("click", async () => {
+  if (!currentCard) return;
+  try {
+    await navigator.clipboard.writeText(cardToText(currentCard));
+    statusElement.textContent = "Скопировано в буфер обмена";
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      statusElement.textContent = defaultStatus;
+    }, 1500);
+  } catch {
+    statusElement.textContent = "Не удалось скопировать";
+  }
 });
 
 form.addEventListener("submit", (event) => {
