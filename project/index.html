@@ -25,11 +25,10 @@
 
     <main class="page-shell">
       <section class="intro" aria-labelledby="page-title">
-        <p class="intro__eyebrow">Формы и хранилища</p>
-        <h1 class="intro__title" id="page-title">Сохраненная карточка</h1>
+        <p class="intro__eyebrow">Достопримечательности</p>
+        <h1 class="intro__title" id="page-title">Карточка достопримечательности</h1>
         <p class="intro__lead">
-          Выберите тему, настройте форму и самостоятельно свяжите ввод,
-          отображение и хранение данных.
+          Заполните форму, сохраните карточку и вернитесь к ней после перезагрузки.
         </p>
       </section>
 
@@ -37,20 +36,18 @@
         <header class="workspace__header">
           <div>
             <p class="workspace__kicker">Рабочая область</p>
-            <h2 class="workspace__title" id="workspace-title">Ваша тема</h2>
+            <h2 class="workspace__title" id="workspace-title">Достопримечательность</h2>
           </div>
 
-          <p class="workspace__status" aria-live="polite">Данные еще не проверены</p>
+          <p class="workspace__status" aria-live="polite">Черновик сохраняется автоматически</p>
         </header>
 
-        <!-- Состояние 1: показывается, когда сохраненных данных нет. -->
         <section class="app-state app-state--empty" data-state-panel="empty">
           <p class="app-state__index">01</p>
           <div class="app-state__content">
             <h3 class="app-state__title">Карточка пока не создана</h3>
             <p class="app-state__text">
-              Начните с формы. После сохранения это состояние должно смениться
-              просмотром карточки.
+              Заполните форму и сохраните карточку — она останется даже после перезагрузки страницы.
             </p>
             <button class="button button--primary" type="button" data-action="create">
               Создать карточку
@@ -58,7 +55,6 @@
           </div>
         </section>
 
-        <!-- Состояние 2: студент дополняет форму под выбранную тему. -->
         <section class="app-state app-state--editor" data-state-panel="editor" hidden>
           <p class="app-state__index">02</p>
 
@@ -68,25 +64,94 @@
                 <p class="card-form__kicker">Редактирование</p>
                 <h3 class="card-form__title">Данные карточки</h3>
               </div>
-              <p class="card-form__note">Добавьте еще минимум три осмысленных поля</p>
+              <p class="card-form__note">Все поля обязательны</p>
             </header>
 
-            <!-- Это один пример связки label, id и name. Остальные поля создайте сами. -->
-            <div class="field">
-              <label class="field__label" for="card-title">Название</label>
-              <input
-                class="field__control"
-                id="card-title"
-                name="title"
-                type="text"
-                minlength="3"
-                placeholder="Например, Городской маршрут"
-                required
-              />
-              <span class="field__hint">Минимум 3 символа</span>
-            </div>
+        <div class="field">
+          <label class="field__label" for="card-title">Название</label>
+          <input
+            class="field__control"
+            id="card-title"
+            name="title"
+            type="text"
+            minlength="3"
+            placeholder="Например, Эйфелева башня"
+            required
+          />
+          <span class="field__hint">Минимум 3 символа</span>
+        </div>
 
-            <!-- Добавьте поля, которые описывают именно вашу тему. -->
+        <div class="field">
+          <label class="field__label" for="card-country">Страна</label>
+          <input
+            class="field__control"
+            id="card-country"
+            name="country"
+            type="text"
+            minlength="2"
+            placeholder="Например, Франция"
+            required
+          />
+          <span class="field__hint">Минимум 2 символа</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="card-type">Тип</label>
+          <select class="field__control" id="card-type" name="type" required>
+            <option value="">— выберите —</option>
+            <option value="architecture">Архитектура</option>
+            <option value="nature">Природный объект</option>
+            <option value="museum">Музей</option>
+            <option value="monument">Памятник</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="card-year">Год постройки</label>
+          <input
+            class="field__control"
+            id="card-year"
+            name="year"
+            type="number"
+            min="1000"
+            max="2026"
+            placeholder="Например, 1889"
+            required
+          />
+          <span class="field__hint">От 1000 до 2026</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="card-restored">Год реставрации</label>
+          <input
+            class="field__control"
+            id="card-restored"
+            name="restored"
+            type="number"
+            min="1000"
+            max="2026"
+            placeholder="Например, 2019"
+            required
+          />
+          <span class="field__hint">Не раньше года постройки</span>
+          <p class="field__error" id="restored-error" hidden>
+            Год реставрации не может быть раньше года постройки
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="card-description">Описание</label>
+          <textarea
+            class="field__control"
+            id="card-description"
+            name="description"
+            minlength="20"
+            placeholder="Чем интересна эта достопримечательность"
+            required
+          ></textarea>
+          <span class="field__hint">Минимум 20 символов</span>
+        </div>
 
             <div class="card-form__actions">
               <button class="button button--primary" type="submit">
@@ -99,25 +164,41 @@
           </form>
         </section>
 
-        <!-- Состояние 3: сюда нужно вывести все сохраненные значения. -->
         <section class="app-state app-state--viewer" data-state-panel="viewer" hidden>
           <p class="app-state__index">03</p>
 
           <article class="saved-card">
             <p class="saved-card__label">Сохраненная карточка</p>
-            <h3 class="saved-card__title">Название появится здесь</h3>
-
-            <dl class="saved-card__details">
-              <div class="saved-card__row">
-                <dt>Свойство</dt>
-                <dd>Значение</dd>
-              </div>
-              <!-- Добавьте строки или другую разметку для всех полей формы. -->
-            </dl>
+            <h3 class="saved-card__title" data-view="title"></h3>
+        <dl class="saved-card__details">
+          <div class="saved-card__row">
+            <dt>Страна</dt>
+            <dd data-view="country"></dd>
+          </div>
+          <div class="saved-card__row">
+            <dt>Тип</dt>
+            <dd data-view="type"></dd>
+          </div>
+          <div class="saved-card__row">
+            <dt>Год постройки</dt>
+            <dd data-view="year"></dd>
+          </div>
+          <div class="saved-card__row">
+            <dt>Год реставрации</dt>
+            <dd data-view="restored"></dd>
+          </div>
+          <div class="saved-card__row">
+            <dt>Описание</dt>
+            <dd data-view="description"></dd>
+          </div>
+        </dl>
 
             <div class="saved-card__actions">
               <button class="button button--primary" type="button" data-action="edit">
                 Редактировать
+              </button>
+              <button class="button button--secondary" type="button" data-action="copy">
+                Скопировать
               </button>
               <button class="button button--danger" type="button" data-action="delete">
                 Удалить
