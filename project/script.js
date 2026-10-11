@@ -7,7 +7,7 @@ const DRAFT_KEY = "hw5.landmark.draft";
 const form = document.querySelector(".card-form");
 const statusElement = document.querySelector(".workspace__status");
 const defaultStatus = statusElement.textContent;
-let statusTimer = null;
+let debounceTimer = null;
 
 function collectCardData(formElement) {
   const formData = new FormData(formElement);
@@ -38,14 +38,8 @@ function showState(name) {
     panel.hidden = true;
   });
   panels[name].hidden = false;
-}
-
-function flashStatus(message) {
-  statusElement.textContent = message;
-  clearTimeout(statusTimer);
-  statusTimer = setTimeout(() => {
-    statusElement.textContent = defaultStatus;
-  }, 1500);
+  statusElement.textContent = defaultStatus;
+  clearTimeout(debounceTimer);
 }
 
 const typeLabels = {
@@ -140,8 +134,15 @@ function removeDraft() {
 }
 
 form.addEventListener("input", () => {
-  saveDraft();
-  flashStatus("Черновик сохранён");
+  statusElement.textContent = "Изменено";
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    statusElement.textContent = "Сохраняется...";
+    saveDraft();
+    debounceTimer = setTimeout(() => {
+      statusElement.textContent = "Сохранено";
+    }, 400);
+  }, 600);
 });
 
 const savedCard = loadCard();
