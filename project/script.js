@@ -2,6 +2,8 @@
 
 const STORAGE_KEY = "hw5.landmark.card";
 
+const DRAFT_KEY = "hw5.landmark.draft";
+
 const form = document.querySelector(".card-form");
 
 function collectCardData(formElement) {
@@ -70,10 +72,12 @@ form.addEventListener("submit", (event) => {
   currentCard = collectCardData(form);
   renderCard(currentCard);
   saveCard(currentCard); 
+  removeDraft();
   showState("viewer");
 });
 
 cancelButton.addEventListener("click", () => {
+  removeDraft();    
   if (currentCard) {
     showState("viewer");
   } else {
@@ -90,6 +94,7 @@ editButton.addEventListener("click", () => {
 deleteButton.addEventListener("click", () => {
   currentCard = null;
   removeCard();  
+  removeDraft();
   form.reset();
   showState("empty");
 });
@@ -108,11 +113,36 @@ function removeCard() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+function saveDraft() {
+  const draft = collectCardData(form);
+  sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+}
+
+function loadDraft() {
+  const raw = sessionStorage.getItem(DRAFT_KEY);
+  if (!raw) return null;
+  return JSON.parse(raw);
+}
+
+function removeDraft() {
+  sessionStorage.removeItem(DRAFT_KEY);
+}
+
+form.addEventListener("input", () => {
+  saveDraft();
+});
+
 const savedCard = loadCard();
 if (savedCard) {
   currentCard = savedCard;
   renderCard(savedCard);
   showState("viewer");
 } else {
-  showState("empty");
+  const draft = loadDraft();
+  if (draft) {
+    fillForm(draft);
+    showState("editor");
+  } else {
+    showState("empty");
+  }
 }
