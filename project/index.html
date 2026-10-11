@@ -39,17 +39,15 @@
             <h2 class="workspace__title" id="workspace-title">Достопримечательность</h2>
           </div>
 
-          <p class="workspace__status" aria-live="polite">Данные еще не проверены</p>
+          <p class="workspace__status" aria-live="polite">Черновик сохраняется автоматически</p>
         </header>
 
-        <!-- Состояние 1: показывается, когда сохраненных данных нет. -->
         <section class="app-state app-state--empty" data-state-panel="empty">
           <p class="app-state__index">01</p>
           <div class="app-state__content">
             <h3 class="app-state__title">Карточка пока не создана</h3>
             <p class="app-state__text">
-              Начните с формы. После сохранения это состояние должно смениться
-              просмотром карточки.
+              Заполните форму и сохраните карточку — она останется даже после перезагрузки страницы.
             </p>
             <button class="button button--primary" type="button" data-action="create">
               Создать карточку
@@ -57,7 +55,6 @@
           </div>
         </section>
 
-        <!-- Состояние 2: студент дополняет форму под выбранную тему. -->
         <section class="app-state app-state--editor" data-state-panel="editor" hidden>
           <p class="app-state__index">02</p>
 
@@ -67,7 +64,7 @@
                 <p class="card-form__kicker">Редактирование</p>
                 <h3 class="card-form__title">Данные карточки</h3>
               </div>
-              <p class="card-form__note">Добавьте еще минимум три осмысленных поля</p>
+              <p class="card-form__note">Все поля обязательны</p>
             </header>
 
         <div class="field">
@@ -149,7 +146,6 @@
           </form>
         </section>
 
-        <!-- Состояние 3: сюда нужно вывести все сохраненные значения. -->
         <section class="app-state app-state--viewer" data-state-panel="viewer" hidden>
           <p class="app-state__index">03</p>
 
