@@ -12,6 +12,7 @@ const yearInput = form.elements.year;
 const restoredInput = form.elements.restored;
 const restoredError = document.getElementById("restored-error");
 const copyButton = document.querySelector('[data-action="copy"]');
+const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 function collectCardData(formElement) {
   const formData = new FormData(formElement);
@@ -153,13 +154,24 @@ deleteButton.addEventListener("click", () => {
 });
 
 function saveCard(card) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(card));
+  const stored = { ...card, createdAt: Date.now() };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
 }
 
 function loadCard() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return null;
-  return JSON.parse(raw);
+
+  const card = JSON.parse(raw);
+
+  if (!card.createdAt) return card;
+
+  if (Date.now() - card.createdAt > MAX_AGE_MS) {
+    removeCard();
+    return "expired";
+  }
+
+  return card;
 }
 
 function removeCard() {
@@ -194,7 +206,11 @@ form.addEventListener("input", () => {
 });
 
 const savedCard = loadCard();
-if (savedCard) {
+
+if (savedCard === "expired") {
+  statusElement.textContent = "Срок хранения карточки истёк. Создайте новую.";
+  showState("empty");
+} else if (savedCard) {
   currentCard = savedCard;
   renderCard(savedCard);
   showState("viewer");
