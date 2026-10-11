@@ -1,5 +1,7 @@
 "use strict";
 
+const STORAGE_KEY = "hw5.landmark.card";
+
 const form = document.querySelector(".card-form");
 
 function collectCardData(formElement) {
@@ -67,6 +69,7 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   currentCard = collectCardData(form);
   renderCard(currentCard);
+  saveCard(currentCard); 
   showState("viewer");
 });
 
@@ -86,6 +89,30 @@ editButton.addEventListener("click", () => {
 
 deleteButton.addEventListener("click", () => {
   currentCard = null;
+  removeCard();  
   form.reset();
   showState("empty");
 });
+
+function saveCard(card) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(card));
+}
+
+function loadCard() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+  return JSON.parse(raw);
+}
+
+function removeCard() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+const savedCard = loadCard();
+if (savedCard) {
+  currentCard = savedCard;
+  renderCard(savedCard);
+  showState("viewer");
+} else {
+  showState("empty");
+}
